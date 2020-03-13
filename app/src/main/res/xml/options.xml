@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+  <CheckBoxPreference
+    android:defaultValue="true"
+    android:key="haptic_feedback"
+    android:title="Haptic Feedback" />
+
+  <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+    android:defaultValue="@color/normal_color"
+    android:key="normal_color"
+    android:title="Normal Color" />
+
+  <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+    android:defaultValue="@color/pressed_color"
+    android:key="pressed_color"
+    android:title="Pressed Color" />
+
+  <EditTextPreference
+    android:defaultValue="24"
+    android:key="image_padding"
+    android:selectAllOnFocus="true"
+    android:singleLine="true"
+    android:title="Image Padding (in dp)" />
+
+  <PreferenceCategory android:title="Center Circle">
+    <CheckBoxPreference
+      android:defaultValue="true"
+      android:key="center_circle"
+      android:title="Enabled" />
+
+    <CheckBoxPreference
+      android:defaultValue="true"
+      android:dependency="center_circle"
+      android:key="center_circle_press"
+      android:title="Press Enabled" />
+
+    <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+      android:defaultValue="@color/colorPrimary"
+      android:dependency="center_circle"
+      android:key="center_circle_normal_color"
+      android:title="Normal Color" />
+
+    <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+      android:defaultValue="@color/colorPrimaryDark"
+      android:dependency="center_circle"
+      android:key="center_circle_pressed_color"
+      android:title="Pressed Color" />
+
+    <EditTextPreference
+      android:defaultValue="4"
+      android:dependency="center_circle"
+      android:key="center_circle_ratio"
+      android:selectAllOnFocus="true"
+      android:singleLine="true"
+      android:title="Circle Ratio" />
+  </PreferenceCategory>
+
+  <PreferenceCategory android:title="Center Icon">
+    <CheckBoxPreference
+      android:defaultValue="true"
+      android:key="center_icon"
+      android:title="Enabled" />
+
+    <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+      android:defaultValue="@android:color/white"
+      android:dependency="center_icon"
+      android:key="center_icon_tint"
+      android:title="Icon Tint" />
+
+    <CheckBoxPreference
+      android:defaultValue="true"
+      android:dependency="center_icon"
+      android:key="center_icon_fixed"
+      android:summary="Wraps if off"
+      android:title="Icon Size Fixed" />
+
+    <EditTextPreference
+      android:defaultValue="48"
+      android:dependency="center_icon_fixed"
+      android:key="center_icon_size"
+      android:selectAllOnFocus="true"
+      android:singleLine="true"
+      android:title="Icon Size (in dp)" />
+  </PreferenceCategory>
+
+  <PreferenceCategory android:title="Center Text">
+    <CheckBoxPreference
+      android:defaultValue="true"
+      android:key="center_text_enabled"
+      android:title="Enabled" />
+
+    <EditTextPreference
+      android:defaultValue="O K"
+      android:dependency="center_text_enabled"
+      android:key="center_text"
+      android:selectAllOnFocus="true"
+      android:singleLine="true"
+      android:title="Center Text" />
+
+    <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+      android:defaultValue="@android:color/white"
+      android:dependency="center_text_enabled"
+      android:key="center_text_color"
+      android:title="Text Color" />
+
+    <EditTextPreference
+      android:defaultValue="18"
+      android:dependency="center_text_enabled"
+      android:key="center_text_size"
+      android:selectAllOnFocus="true"
+      android:singleLine="true"
+      android:title="Text Size (in sp)" />
+
+    <CheckBoxPreference
+      android:defaultValue="true"
+      android:dependency="center_text_enabled"
+      android:key="center_text_bold"
+      android:title="Bold" />
+
+    <CheckBoxPreference
+      android:defaultValue="true"
+      android:dependency="center_text_enabled"
+      android:key="center_text_italic"
+      android:title="Italic" />
+
+    <CheckBoxPreference
+      android:defaultValue="true"
+      android:dependency="center_text_enabled"
+      android:key="center_text_underline"
+      android:title="Underline" />
+  </PreferenceCategory>
+</PreferenceScreen>

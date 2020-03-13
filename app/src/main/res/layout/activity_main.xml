@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="vertical"
+  android:padding="16dp"
+  tools:context=".MainActivity">
+
+  <com.codertainment.dpadview.DPadView
+    android:id="@+id/dpad"
+    android:layout_width="match_parent"
+    android:layout_height="256dp"
+    android:layout_gravity="center"
+    android:src="@drawable/ic_gamepad_black"
+    app:centerCircleRatio="4.5"
+    app:centerIcon="@drawable/ic_done_black"
+    app:centerIconTint="@android:color/white"
+    app:centerText="O  K"
+    app:centerTextSize="22sp"
+    app:centerTextStyle="italic|bold"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent" />
+
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+      style="@style/TextAppearance.MaterialComponents.Headline5"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_weight="1"
+      android:text="Options" />
+
+    <com.google.android.material.button.MaterialButton
+      android:id="@+id/apply"
+      style="@style/TextAppearance.AppCompat.Widget.Button.Colored"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="Apply" />
+  </LinearLayout>
+
+  <fragment
+    android:id="@+id/settings"
+    class="com.codertainment.dpadview.sample.SettingsFragment"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp" />
+</LinearLayout>

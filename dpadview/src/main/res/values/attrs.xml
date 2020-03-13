@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <declare-styleable name="DPadView">
+    <attr name="pressedColor" format="color" />
+    <attr name="normalColor" format="color" />
+    <attr name="centerCircleNormalColor" format="color" />
+    <attr name="centerCirclePressedColor" format="color" />
+    <attr name="centerCircleEnabled" format="boolean" />
+    <attr name="centerCirclePressEnabled" format="boolean" />
+    <attr name="centerCircleRatio" format="float" />
+    <attr name="imagePadding" format="dimension" />
+    <attr name="centerText" format="string" />
+    <attr name="centerIcon" format="reference" />
+    <attr name="centerIconSizeMode" format="enum">
+      <enum name="wrap" value="0" />
+      <enum name="fixed" value="1" />
+    </attr>
+    <attr name="centerIconSize" format="dimension" />
+    <attr name="centerIconTint" format="color" />
+    <attr name="centerTextSize" format="dimension" />
+    <attr name="centerTextColor" format="color" />
+    <attr name="centerTextStyle" format="flags">
+      <flag name="normal" value="0" />
+      <flag name="bold" value="1" />
+      <flag name="italic" value="2" />
+      <flag name="underline" value="4" />
+    </attr>
+  </declare-styleable>
+</resources>
