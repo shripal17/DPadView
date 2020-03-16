@@ -47,7 +47,7 @@ All the mentioned attributes are applicable for both Kotlin/Java and XML
 | `centerText` | Text to be displayed in the center (e.g. OK) | String | Empty |
 | `centerTextSize` | Text size for the center text | Dimension (px at runtime) | `14f` |
 | `centerTextColor` | Text color for the center text | Color Int| Automatically picked as Black/White depending on `centerCircleNormalColor` |
-| `centerTextStyle` | Text style for the center text | For XML: Combination of any of `bold`, `italic`, `underline` e.g. `bold|italic|underline`<br> At runtime: Combination of any of `TextStyle.BOLD`, `TextStyle.ITALIC`, `TextStyle.UNDERLINE` e.g. `TextStyle.BOLD and TextStyle.UNDERLINE and TextStyle.ITALIC` | Normal |
+| `centerTextStyle` | Text style for the center text | For XML: Combination of any of `bold`, `italic`, `underline` e.g. `bold\|italic\|underline` <br> At runtime: Combination of any of `TextStyle.BOLD`, `TextStyle.ITALIC`, `TextStyle.UNDERLINE` e.g. `TextStyle.BOLD and TextStyle.UNDERLINE and TextStyle.ITALIC` | Normal |
 | `centerIcon` | The drawable to be displayed in the center | Drawable/Mipmap Resource Reference| NA |
 |`centerIconSizeMode` | Size mode for the icon, whether the size should be fixed or it should wrap the image src | `wrap` or `fixed` for XML, `IconSizeMode.WRAP` or `IconSizeMode.FIXED` for runtime | Wrap |
 | `centerIconSize` | Icon size to be used if `centerIconSizeMode` is set to fixed| Dimension (px at runtime) | `24dp` |
@@ -112,4 +112,3 @@ Create a new issue to add your app here
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
     limitations under the License.
-
