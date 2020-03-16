@@ -1,5 +1,6 @@
 package com.codertainment.dpadview
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.*
 import android.graphics.drawable.Drawable
@@ -32,9 +33,9 @@ class DPadView(context: Context, private val attrs: AttributeSet) : AppCompatIma
     UNDERLINE(4)
   }
 
-  enum class CenterIconSizeMode(mode: Int) {
-    WRAP(0),
-    FIXED(1)
+  enum class CenterIconSizeMode() {
+    WRAP,
+    FIXED
   }
 
   enum class Direction {
@@ -297,6 +298,7 @@ class DPadView(context: Context, private val attrs: AttributeSet) : AppCompatIma
     invalidate()
   }
 
+  @SuppressLint("ClickableViewAccessibility")
   override fun onTouchEvent(event: MotionEvent?): Boolean {
     if (event == null) return false
 
