@@ -1,9 +1,37 @@
-# DPad View
+# DPad View [![](https://jitpack.io/v/shripal17/DPadView.svg)](https://jitpack.io/#shripal17/DPadView) ![](https://img.shields.io/badge/SDK-14+-blueviolet)
 A simple, but highly customisable DPadView for Android.
+
 100% Kotlin and Kotlin-first approach.
 
 ## Screenshots
-To be added
+| With CenterText | With Center Icon | Without Center Text/Icon |
+| ---- | ---- | ---- |
+| ![With Center Text](/art/CenterText.jpg?raw=true) | ![With Center Icon](/art/CenterIcon.jpg?raw=true) | ![Without Center Text/Icon](/art/NoTextIcon.jpg?raw=true) |
+
+## Full Demo
+![Whole Video](/art/DPadView.gif?raw=true)
+
+## Import
+##### Through JitPack
+```groovy
+buildscript {
+  //...
+}
+allProjects {
+  repositories {
+    //...
+    maven { url "https://jitpack.io" }
+  }
+}
+```
+2. Add to module-level build.gradle
+```groovy
+dependencies {
+  //...
+  implementation 'com.github.shripal17:DPadView:1.0.0'
+}
+```
+
 
 ## Usage
 ###### In layout XML
@@ -97,8 +125,6 @@ Create a new issue to add your app here
 
 ## License
 --------
-
-
     Copyright 2020 Shripal Jain
 
     Licensed under the Apache License, Version 2.0 (the "License");

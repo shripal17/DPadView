@@ -21,7 +21,7 @@
     android:key="image_padding"
     android:selectAllOnFocus="true"
     android:singleLine="true"
-    android:title="Image Padding (in dp)" />
+    android:title="Image Padding" />
 
   <PreferenceCategory android:title="Center Circle">
     <CheckBoxPreference
@@ -81,7 +81,7 @@
       android:key="center_icon_size"
       android:selectAllOnFocus="true"
       android:singleLine="true"
-      android:title="Icon Size (in dp)" />
+      android:title="Icon Size" />
   </PreferenceCategory>
 
   <PreferenceCategory android:title="Center Text">
@@ -110,7 +110,7 @@
       android:key="center_text_size"
       android:selectAllOnFocus="true"
       android:singleLine="true"
-      android:title="Text Size (in sp)" />
+      android:title="Text Size" />
 
     <CheckBoxPreference
       android:defaultValue="true"
