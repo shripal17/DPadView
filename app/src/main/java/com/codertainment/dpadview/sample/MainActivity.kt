@@ -1,6 +1,7 @@
 package com.codertainment.dpadview.sample
 
 import android.os.Bundle
+import android.view.MotionEvent
 import androidx.appcompat.app.AppCompatActivity
 import com.codertainment.dpadview.DPadView
 import kotlinx.android.synthetic.main.activity_main.*
@@ -17,13 +18,13 @@ class MainActivity : AppCompatActivity() {
     setContentView(R.layout.activity_main)
 
     apply.setOnClickListener {
-      dpad.apply {
+      dpad.modify {
 
         isHapticFeedbackEnabled = prefs.getBoolean("haptic_feedback", true)
 
-        normalDirectionColor = prefs.getInt("normal_color", 0)
-        pressedDirectionColor = prefs.getInt("pressed_color", 0)
-        padding = prefs.getString("image_padding", "24")?.toFloat() ?: 24f
+        normalColor = prefs.getInt("normal_color", 0)
+        pressedColor = prefs.getInt("pressed_color", 0)
+        padding = getFloat("image_padding", 24f)
 
         isCenterCircleEnabled = prefs.getBoolean("center_circle", true)
         isCenterCirclePressEnabled = prefs.getBoolean("center_circle_press", true)
@@ -31,7 +32,7 @@ class MainActivity : AppCompatActivity() {
         centerCircleNormalColor = prefs.getInt("center_circle_normal_color", 0)
         centerCirclePressedColor = prefs.getInt("center_circle_pressed_color", 0)
 
-        centerCircleRatio = prefs.getString("center_circle_ratio", "4")?.toFloat() ?: 4f
+        centerCircleRatio = getFloat("center_circle_ratio", 4f)
 
         centerIcon = if (prefs.getBoolean("center_icon", true)) {
           R.drawable.ic_done_black
@@ -45,7 +46,7 @@ class MainActivity : AppCompatActivity() {
           DPadView.CenterIconSizeMode.WRAP
         }
 
-        centerIconSize = prefs.getString("center_icon_size", "48")?.toFloat() ?: 48f
+        centerIconSize = getFloat("center_icon_size", 48f)
 
         centerText = if (prefs.getBoolean("center_text_enabled", true)) {
           prefs.getString("center_text", "O K")
@@ -53,9 +54,9 @@ class MainActivity : AppCompatActivity() {
           ""
         }
 
-        centerIconTint = prefs.getInt("center_icon_color", 0)
+        centerIconTint = prefs.getInt("center_icon_tint", 0)
 
-        centerTextSize = prefs.getString("center_text_size", "18")?.toFloat() ?: 18f
+        centerTextSize = getFloat("center_text_size", 18f)
 
         var style = 0
         if (prefs.getBoolean("center_text_bold", true)) {
@@ -71,10 +72,38 @@ class MainActivity : AppCompatActivity() {
         centerTextStyle = style
 
         centerTextColor = prefs.getInt("center_text_color", 0)
-        reInit()
       }
     }
 
     apply.performClick()
+
+    dpad.onDirectionPressListener = { direction, action ->
+      val text = StringBuilder()
+      val directionText = direction?.name ?: ""
+      if (directionText.isNotEmpty()) {
+        text.append("Direction:\t")
+      }
+      text.append(directionText)
+      if (directionText.isNotEmpty()) {
+        text.append("\nAction:\t")
+        val actionText = when (action) {
+          MotionEvent.ACTION_DOWN -> "Down"
+          MotionEvent.ACTION_UP -> "Up"
+          MotionEvent.ACTION_MOVE -> "Move"
+          else -> action.toString()
+        }
+        text.append(actionText)
+      }
+      touched.text = text.toString()
+    }
+  }
+
+  private fun getFloat(key: String, defValue: Float): Float {
+    return try {
+      prefs.getString(key, "$defValue")?.toFloat() ?: defValue
+    } catch (e: Exception) {
+      e.printStackTrace()
+      defValue
+    }
   }
 }

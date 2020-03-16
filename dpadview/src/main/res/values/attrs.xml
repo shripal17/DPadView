@@ -1,29 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <declare-styleable name="DPadView">
-    <attr name="pressedColor" format="color" />
-    <attr name="normalColor" format="color" />
-    <attr name="centerCircleNormalColor" format="color" />
-    <attr name="centerCirclePressedColor" format="color" />
-    <attr name="centerCircleEnabled" format="boolean" />
-    <attr name="centerCirclePressEnabled" format="boolean" />
-    <attr name="centerCircleRatio" format="float" />
+    <!-- Padding for the image to be displayed -->
     <attr name="imagePadding" format="dimension" />
+
+
+    <!-- Color of the direction section when it is not pressed -->
+    <attr name="normalColor" format="color" />
+
+    <!-- Color of the direction section when it is pressed -->
+    <attr name="pressedColor" format="color" />
+
+
+    <!-- Whether to enable the center circle -->
+    <attr name="centerCircleEnabled" format="boolean" />
+
+    <!-- If center circle is enabled, whether it should detect touch on center circle -->
+    <attr name="centerCirclePressEnabled" format="boolean" />
+
+    <!-- Color of the center circle when it is not pressed -->
+    <attr name="centerCircleNormalColor" format="color" />
+
+    <!-- Color of the center circle when it is pressed -->
+    <attr name="centerCirclePressedColor" format="color" />
+
+    <!-- The size of the center circle will be the size of view divided by this value -->
+    <attr name="centerCircleRatio" format="float" />
+
+
+    <!-- Text to be displayed in the center (e.g. OK) -->
     <attr name="centerText" format="string" />
-    <attr name="centerIcon" format="reference" />
-    <attr name="centerIconSizeMode" format="enum">
-      <enum name="wrap" value="0" />
-      <enum name="fixed" value="1" />
-    </attr>
-    <attr name="centerIconSize" format="dimension" />
-    <attr name="centerIconTint" format="color" />
+
+    <!-- Text size for the center text -->
     <attr name="centerTextSize" format="dimension" />
+
+    <!-- Text color for the center text -->
     <attr name="centerTextColor" format="color" />
+
+    <!-- Text style for the center text, can be combination like bold|italic|underline-->
     <attr name="centerTextStyle" format="flags">
       <flag name="normal" value="0" />
       <flag name="bold" value="1" />
       <flag name="italic" value="2" />
       <flag name="underline" value="4" />
     </attr>
+
+
+    <!-- The drawable to be displayed in the center -->
+    <attr name="centerIcon" format="reference" />
+
+    <!-- Size mode for the icon, whether the size should be fixed or it should wrap the image src -->
+    <attr name="centerIconSizeMode" format="enum">
+      <enum name="wrap" value="0" />
+      <enum name="fixed" value="1" />
+    </attr>
+
+    <!-- Icon size to be used if centerIconSizeMode is set to fixed -->
+    <attr name="centerIconSize" format="dimension" />
+
+    <!-- The color to tint the center icon with -->
+    <attr name="centerIconTint" format="color" />
+
   </declare-styleable>
 </resources>

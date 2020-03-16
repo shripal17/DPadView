@@ -13,31 +13,33 @@
     android:layout_width="match_parent"
     android:layout_height="256dp"
     android:layout_gravity="center"
-    android:src="@drawable/ic_gamepad_black"
-    app:centerCircleRatio="4.5"
-    app:centerIcon="@drawable/ic_done_black"
-    app:centerIconTint="@android:color/white"
-    app:centerText="O  K"
-    app:centerTextSize="22sp"
-    app:centerTextStyle="italic|bold"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent" />
+    android:src="@drawable/ic_gamepad_black" />
+
+  <TextView
+    android:id="@+id/touched"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="16dp"
+    android:gravity="center_horizontal"
+    android:textAlignment="center"
+    tools:text="Direction: Up\nAction: DOWN" />
 
   <LinearLayout
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp">
 
     <TextView
       style="@style/TextAppearance.MaterialComponents.Headline5"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
+      android:layout_gravity="center_vertical"
       android:layout_weight="1"
       android:text="Options" />
 
     <com.google.android.material.button.MaterialButton
       android:id="@+id/apply"
-      style="@style/TextAppearance.AppCompat.Widget.Button.Colored"
+      style="@style/Widget.MaterialComponents.Button.OutlinedButton"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:text="Apply" />

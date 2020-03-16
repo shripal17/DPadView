@@ -13,6 +13,7 @@ import androidx.annotation.DrawableRes
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
+import androidx.core.graphics.drawable.DrawableCompat
 import kotlin.math.abs
 import kotlin.math.atan2
 import kotlin.math.min
@@ -36,49 +37,113 @@ class DPadView(context: Context, private val attrs: AttributeSet) : AppCompatIma
     FIXED(1)
   }
 
-  @ColorInt
-  var normalDirectionColor: Int
+  enum class Direction {
+    UP, DOWN, LEFT, RIGHT, CENTER
+  }
 
+  /**
+   * Color of the direction section when it is pressed
+   */
   @ColorInt
-  var pressedDirectionColor: Int
+  var normalColor: Int
 
+  /**
+   * Color of the direction section when it is not pressed
+   */
+  @ColorInt
+  var pressedColor: Int
+
+
+  /**
+   * Padding for the image to be displayed
+   */
+  var padding = 20f
+
+
+  /**
+   * Whether to enable the center circle
+   */
+  var isCenterCircleEnabled = true
+
+  /**
+   * If center circle is enabled, whether it should detect touch on them
+   */
+  var isCenterCirclePressEnabled = true
+
+  /**
+   * Color of the center circle when it is not pressed
+   */
   @ColorInt
   var centerCircleNormalColor: Int
 
+  /**
+   * Color of the center circle when it is pressed
+   */
   @ColorInt
   var centerCirclePressedColor: Int
 
-  var isCenterCircleEnabled = true
-  var isCenterCirclePressEnabled = true
+  /**
+   * The size of the center circle will be the size of view divided by this value
+   */
+  var centerCircleRatio = 3.5f
 
+
+  /**
+   *  Text to be displayed in the center (e.g. OK)
+   */
   var centerText: String? = null
 
+  /**
+   * Text size for the center text
+   */
+  var centerTextSize: Float
+
+  /**
+   * Text color for the center text
+   */
+  @ColorInt
+  var centerTextColor: Int
+
+  /**
+   * Text style for the center text, can be combination like `BOLD or ITALIC or UNDERLINE`
+   */
+  var centerTextStyle: Int
+
+
+  /**
+   * The drawable to be displayed in the center
+   */
   @DrawableRes
   var centerIcon: Int? = null
-
-  var centerCircleRatio = 3.5f
 
   private var size = 0
 
   private var circleCenter = size.toFloat() / 2
   private var centerCircleRadius = size / centerCircleRatio
-  var padding = 20f
+
+  /**
+   * Size mode for the icon, whether the size should be fixed or it should wrap the image src
+   */
   var centerIconSizeMode: CenterIconSizeMode
+
+  /**
+   * Icon size to be used if centerIconSizeMode is set to fixed
+   */
   var centerIconSize: Float
 
+  /**
+   * The color to tint the center icon with
+   */
   @ColorInt
   var centerIconTint: Int
-  var centerIconDrawable: Drawable? = null
 
-  var centerTextSize: Float
+  /**
+   * Direction Presses Listener
+   */
+  var onDirectionPressListener: (direction: Direction?, action: Int) -> Unit = { _, _ -> }
 
-  @ColorInt
-  var centerTextColor: Int
-
-  var centerTextStyle: Int
-
+  private var centerIconDrawable: Drawable? = null
   private var textPaint = Paint()
-
   private val centerCirclePaint = Paint()
   private val upPaint = Paint()
   private val downPaint = Paint()
@@ -98,8 +163,8 @@ class DPadView(context: Context, private val attrs: AttributeSet) : AppCompatIma
 
   init {
     context.theme.obtainStyledAttributes(attrs, R.styleable.DPadView, 0, 0).apply {
-      normalDirectionColor = getColor(R.styleable.DPadView_normalColor, context.resolveColorAttr(android.R.attr.textColorSecondary))
-      pressedDirectionColor = getColor(R.styleable.DPadView_pressedColor, context.resolveColorAttr(R.attr.colorAccent))
+      normalColor = getColor(R.styleable.DPadView_normalColor, context.resolveColorAttr(android.R.attr.textColorSecondary))
+      pressedColor = getColor(R.styleable.DPadView_pressedColor, context.resolveColorAttr(R.attr.colorAccent))
       centerCircleNormalColor = getColor(R.styleable.DPadView_centerCircleNormalColor, context.resolveColorAttr(R.attr.colorPrimary))
       centerCirclePressedColor = getColor(R.styleable.DPadView_centerCirclePressedColor, context.resolveColorAttr(R.attr.colorPrimaryDark))
       isCenterCircleEnabled = getBoolean(R.styleable.DPadView_centerCircleEnabled, true)
@@ -137,7 +202,7 @@ class DPadView(context: Context, private val attrs: AttributeSet) : AppCompatIma
 
     if (centerIconDrawable != null) {
       if (centerIconTint != 0) {
-        centerIconDrawable!!.colorFilter = PorterDuffColorFilter(centerIconTint, PorterDuff.Mode.SRC_ATOP)
+        DrawableCompat.setTint(centerIconDrawable!!, centerIconTint)
       }
     }
 
@@ -161,10 +226,10 @@ class DPadView(context: Context, private val attrs: AttributeSet) : AppCompatIma
       setTypeface(typeface)
     }
 
-    upPaint.color = normalDirectionColor
-    downPaint.color = normalDirectionColor
-    rightPaint.color = normalDirectionColor
-    leftPaint.color = normalDirectionColor
+    upPaint.color = normalColor
+    downPaint.color = normalColor
+    rightPaint.color = normalColor
+    leftPaint.color = normalColor
 
     centerCirclePaint.color = centerCircleNormalColor
 
@@ -202,7 +267,9 @@ class DPadView(context: Context, private val attrs: AttributeSet) : AppCompatIma
     centerIconDrawable?.let {
       if (centerIconSizeMode == CenterIconSizeMode.WRAP) {
         centerIconRect.set(
-          circleCenter.toInt() - it.intrinsicWidth / 2, circleCenter.toInt() - it.intrinsicHeight / 2, circleCenter.toInt() + it.intrinsicWidth / 2,
+          circleCenter.toInt() - it.intrinsicWidth / 2,
+          circleCenter.toInt() - it.intrinsicHeight / 2,
+          circleCenter.toInt() + it.intrinsicWidth / 2,
           circleCenter.toInt() + it.intrinsicHeight / 2
         )
       } else {
@@ -248,7 +315,7 @@ class DPadView(context: Context, private val attrs: AttributeSet) : AppCompatIma
       val isTouched = event.isTouched
 
       if (isInCenterCircle) {
-        centerCircleTouched = isTouched
+        centerCircleTouched = true
       } else {
         var deg = Math.toDegrees(atan2(event.y - width / 2, event.x - width / 2).toDouble())
         if (deg < 0) {
@@ -256,22 +323,39 @@ class DPadView(context: Context, private val attrs: AttributeSet) : AppCompatIma
         }
 
         if (deg > 315 || deg <= 45) {
-          rightTouched = isTouched
+          rightTouched = true
         } else if (deg > 45 && deg <= 135) {
-          downTouched = isTouched
+          downTouched = true
         } else if (deg > 135 && deg <= 225) {
-          leftTouched = isTouched
+          leftTouched = true
         } else if (deg > 225 && deg < 315) {
-          upTouched = isTouched
+          upTouched = true
         }
       }
+
+      val d = when {
+        centerCircleTouched -> Direction.CENTER
+        upTouched -> Direction.UP
+        downTouched -> Direction.DOWN
+        leftTouched -> Direction.LEFT
+        rightTouched -> Direction.RIGHT
+        else -> null
+      }
+
+      onDirectionPressListener(d, event.action)
+
+      centerCircleTouched = centerCircleTouched and isTouched
+      upTouched = upTouched and isTouched
+      downTouched = downTouched and isTouched
+      leftTouched = leftTouched and isTouched
+      rightTouched = rightTouched and isTouched
     }
 
     centerCirclePaint.color = if (!centerCircleTouched) centerCircleNormalColor else centerCirclePressedColor
-    rightPaint.color = if (!rightTouched) normalDirectionColor else pressedDirectionColor
-    downPaint.color = if (!downTouched) normalDirectionColor else pressedDirectionColor
-    leftPaint.color = if (!leftTouched) normalDirectionColor else pressedDirectionColor
-    upPaint.color = if (!upTouched) normalDirectionColor else pressedDirectionColor
+    rightPaint.color = if (!rightTouched) normalColor else pressedColor
+    downPaint.color = if (!downTouched) normalColor else pressedColor
+    leftPaint.color = if (!leftTouched) normalColor else pressedColor
+    upPaint.color = if (!upTouched) normalColor else pressedColor
 
     if (isHapticFeedbackEnabled && event.action == MotionEvent.ACTION_DOWN) {
       if (centerCircleTouched || rightTouched || leftTouched || upTouched || downTouched) {
@@ -296,6 +380,11 @@ class DPadView(context: Context, private val attrs: AttributeSet) : AppCompatIma
 
     if (dx + dy <= radius) return true
     return dx * dx + dy * dy <= radius * radius
+  }
+
+  fun modify(func: DPadView.() -> Unit) {
+    func()
+    reInit()
   }
 }
 
