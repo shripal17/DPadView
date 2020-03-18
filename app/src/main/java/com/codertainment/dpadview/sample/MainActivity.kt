@@ -1,6 +1,7 @@
 package com.codertainment.dpadview.sample
 
 import android.os.Bundle
+import android.util.Log
 import android.view.MotionEvent
 import androidx.appcompat.app.AppCompatActivity
 import com.codertainment.dpadview.DPadView
@@ -95,6 +96,16 @@ class MainActivity : AppCompatActivity() {
         text.append(actionText)
       }
       touched.text = text.toString()
+    }
+
+    dpad.onDirectionClickListener = {
+      it?.let {
+        Log.i("directionPress", it.name)
+      }
+    }
+
+    dpad.setOnClickListener {
+      Log.i("Click", "Done")
     }
   }
 

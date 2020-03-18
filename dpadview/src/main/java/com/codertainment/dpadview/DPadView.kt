@@ -143,6 +143,8 @@ class DPadView(context: Context, private val attrs: AttributeSet) : AppCompatIma
    */
   var onDirectionPressListener: (direction: Direction?, action: Int) -> Unit = { _, _ -> }
 
+  var onDirectionClickListener: (direction: Direction?) -> Unit = {}
+
   private var centerIconDrawable: Drawable? = null
   private var textPaint = Paint()
   private val centerCirclePaint = Paint()
@@ -314,6 +316,7 @@ class DPadView(context: Context, private val attrs: AttributeSet) : AppCompatIma
     downTouched = false
 
     if (isInCircle) {
+      if (event.action == MotionEvent.ACTION_DOWN) performClick()
       val isTouched = event.isTouched
 
       if (isInCenterCircle) {
@@ -343,6 +346,8 @@ class DPadView(context: Context, private val attrs: AttributeSet) : AppCompatIma
         rightTouched -> Direction.RIGHT
         else -> null
       }
+
+      if (event.action == MotionEvent.ACTION_DOWN) onDirectionClickListener(d)
 
       onDirectionPressListener(d, event.action)
 

@@ -28,7 +28,7 @@ allProjects {
 ```groovy
 dependencies {
   //...
-  implementation 'com.github.shripal17:DPadView:1.0.0'
+  implementation 'com.github.shripal17:DPadView:1.0.1'
 }
 ```
 
@@ -80,6 +80,7 @@ All the mentioned attributes are applicable for both Kotlin/Java and XML
 |`centerIconSizeMode` | Size mode for the icon, whether the size should be fixed or it should wrap the image src | `wrap` or `fixed` for XML, `IconSizeMode.WRAP` or `IconSizeMode.FIXED` for runtime | Wrap |
 | `centerIconSize` | Icon size to be used if `centerIconSizeMode` is set to fixed| Dimension (px at runtime) | `24dp` |
 | `centerIconTint` | The color to tint the center icon with | Color Int | NA |
+|`hapticFeedbackEnabled` | Device will vibrate when user touches any direction | Boolean | False |
 
 ### Updating attributes at runtime
 1. Using `DPadView.modify`:
