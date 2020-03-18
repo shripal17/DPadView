@@ -107,6 +107,10 @@ class MainActivity : AppCompatActivity() {
     dpad.setOnClickListener {
       Log.i("Click", "Done")
     }
+
+    dpad.onCenterLongClick = {
+      Log.i("center", "long click")
+    }
   }
 
   private fun getFloat(key: String, defValue: Float): Float {

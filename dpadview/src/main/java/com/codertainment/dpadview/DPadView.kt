@@ -6,6 +6,7 @@ import android.graphics.*
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.util.TypedValue
+import android.view.GestureDetector
 import android.view.HapticFeedbackConstants
 import android.view.MotionEvent
 import androidx.annotation.AttrRes
@@ -24,7 +25,7 @@ import kotlin.math.min
  * on 12/03/2020
  */
 
-class DPadView(context: Context, private val attrs: AttributeSet) : AppCompatImageView(context, attrs) {
+class DPadView(context: Context, private val attrs: AttributeSet) : AppCompatImageView(context, attrs), GestureDetector.OnGestureListener {
 
   enum class TextStyle(val style: Int) {
     NORMAL(0),
@@ -143,7 +144,15 @@ class DPadView(context: Context, private val attrs: AttributeSet) : AppCompatIma
    */
   var onDirectionPressListener: (direction: Direction?, action: Int) -> Unit = { _, _ -> }
 
+  /**
+   * Direction Clicks Listener
+   */
   var onDirectionClickListener: (direction: Direction?) -> Unit = {}
+
+  /**
+   * When DPad Center button is Long Clicked, this method is called
+   */
+  var onCenterLongClick = {}
 
   private var centerIconDrawable: Drawable? = null
   private var textPaint = Paint()
@@ -163,6 +172,7 @@ class DPadView(context: Context, private val attrs: AttributeSet) : AppCompatIma
   private var textBoundsRect = Rect()
   private var centerIconRect = Rect()
   private var arcsRect = RectF()
+  private var detector: GestureDetector
 
   init {
     context.theme.obtainStyledAttributes(attrs, R.styleable.DPadView, 0, 0).apply {
@@ -191,6 +201,10 @@ class DPadView(context: Context, private val attrs: AttributeSet) : AppCompatIma
       centerTextStyle = getInteger(R.styleable.DPadView_centerTextStyle, 0)
 
       recycle()
+
+      detector = GestureDetector(context, this@DPadView).apply {
+        setIsLongpressEnabled(true)
+      }
 
       init()
     }
@@ -308,18 +322,20 @@ class DPadView(context: Context, private val attrs: AttributeSet) : AppCompatIma
     val isInCenterCircle = if (isCenterCircleEnabled && isCenterCirclePressEnabled) {
       isInCircle(event.x, event.y, circleCenter.toInt(), centerCircleRadius - halfPadding)
     } else false
-    centerCircleTouched = false
-
-    rightTouched = false
-    leftTouched = false
-    upTouched = false
-    downTouched = false
 
     if (isInCircle) {
+      centerCircleTouched = false
+
+      rightTouched = false
+      leftTouched = false
+      upTouched = false
+      downTouched = false
+
       if (event.action == MotionEvent.ACTION_DOWN) performClick()
       val isTouched = event.isTouched
 
       if (isInCenterCircle) {
+        detector.onTouchEvent(event)
         centerCircleTouched = true
       } else {
         var deg = Math.toDegrees(atan2(event.y - width / 2, event.x - width / 2).toDouble())
@@ -338,16 +354,9 @@ class DPadView(context: Context, private val attrs: AttributeSet) : AppCompatIma
         }
       }
 
-      val d = when {
-        centerCircleTouched -> Direction.CENTER
-        upTouched -> Direction.UP
-        downTouched -> Direction.DOWN
-        leftTouched -> Direction.LEFT
-        rightTouched -> Direction.RIGHT
-        else -> null
-      }
+      val d = getDirection()
 
-      if (event.action == MotionEvent.ACTION_DOWN) onDirectionClickListener(d)
+      if (event.action == MotionEvent.ACTION_DOWN && d != Direction.CENTER) onDirectionClickListener(d)
 
       onDirectionPressListener(d, event.action)
 
@@ -356,6 +365,17 @@ class DPadView(context: Context, private val attrs: AttributeSet) : AppCompatIma
       downTouched = downTouched and isTouched
       leftTouched = leftTouched and isTouched
       rightTouched = rightTouched and isTouched
+    } else {
+      getDirection()?.let {
+        onDirectionPressListener(it, MotionEvent.ACTION_UP)
+        when (it) {
+          Direction.CENTER -> centerCircleTouched = false
+          Direction.LEFT -> leftTouched = false
+          Direction.RIGHT -> rightTouched = false
+          Direction.UP -> upTouched = false
+          Direction.DOWN -> downTouched = false
+        }
+      }
     }
 
     centerCirclePaint.color = if (!centerCircleTouched) centerCircleNormalColor else centerCirclePressedColor
@@ -392,6 +412,33 @@ class DPadView(context: Context, private val attrs: AttributeSet) : AppCompatIma
   fun modify(func: DPadView.() -> Unit) {
     func()
     reInit()
+  }
+
+  override fun onShowPress(e: MotionEvent?) {}
+
+  override fun onSingleTapUp(e: MotionEvent?): Boolean {
+    onDirectionClickListener(Direction.CENTER)
+    return true
+  }
+
+  override fun onDown(e: MotionEvent?): Boolean = true
+
+  override fun onFling(e1: MotionEvent?, e2: MotionEvent?, velocityX: Float, velocityY: Float): Boolean = false
+
+  override fun onScroll(e1: MotionEvent?, e2: MotionEvent?, distanceX: Float, distanceY: Float): Boolean = false
+
+  override fun onLongPress(e: MotionEvent?) {
+    onCenterLongClick()
+    centerCircleTouched = false
+  }
+
+  private fun getDirection(): Direction? = when {
+    centerCircleTouched -> Direction.CENTER
+    upTouched -> Direction.UP
+    downTouched -> Direction.DOWN
+    leftTouched -> Direction.LEFT
+    rightTouched -> Direction.RIGHT
+    else -> null
   }
 }
 

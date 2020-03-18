@@ -28,7 +28,7 @@ allProjects {
 ```groovy
 dependencies {
   //...
-  implementation 'com.github.shripal17:DPadView:1.0.1'
+  implementation 'com.github.shripal17:DPadView:1.0.2'
 }
 ```
 
@@ -119,6 +119,13 @@ dpadView.onDirectionPressListener = { direction, action ->
 ```kotlin
 dpadView.onDirectionClickListener = { direction -> 
   // the direction which has been clicked
+}
+```
+
+### Center Circle Long Click
+```kotlin
+dpadView.onCenterLongClick = {
+  // perform action here
 }
 ```
 
