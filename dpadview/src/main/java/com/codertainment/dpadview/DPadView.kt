@@ -12,6 +12,7 @@ import android.view.MotionEvent
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
+import androidx.annotation.FloatRange
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
@@ -25,8 +26,11 @@ import kotlin.math.min
  * on 12/03/2020
  */
 
-class DPadView(context: Context, private val attrs: AttributeSet) : AppCompatImageView(context, attrs), GestureDetector.OnGestureListener {
+class DPadView(context: Context, attrs: AttributeSet) : AppCompatImageView(context, attrs), GestureDetector.OnGestureListener {
 
+  /**
+   * TextStyle Flags for center text
+   */
   enum class TextStyle(val style: Int) {
     NORMAL(0),
     BOLD(1),
@@ -34,7 +38,10 @@ class DPadView(context: Context, private val attrs: AttributeSet) : AppCompatIma
     UNDERLINE(4)
   }
 
-  enum class CenterIconSizeMode() {
+  /**
+   * Size mode for the center icon
+   */
+  enum class CenterIconSizeMode {
     WRAP,
     FIXED
   }
@@ -55,6 +62,11 @@ class DPadView(context: Context, private val attrs: AttributeSet) : AppCompatIma
   @ColorInt
   var pressedColor: Int
 
+  /**
+   * Angle for each direction section (should be between 1 and 90)
+   */
+  @FloatRange(fromInclusive = true, from = 1.0, to = 90.0, toInclusive = true)
+  var directionSectionAngle: Float
 
   /**
    * Padding for the image to be displayed
@@ -167,17 +179,37 @@ class DPadView(context: Context, private val attrs: AttributeSet) : AppCompatIma
   private var rightTouched = false
   private var centerCircleTouched = false
   private val halfPadding = padding / 2
-  private var sweepAngle = 88f
+  private var sectionAngleHalf = 88f / 2
   private var clipBoundsRect = Rect()
   private var textBoundsRect = Rect()
   private var centerIconRect = Rect()
   private var arcsRect = RectF()
   private var detector: GestureDetector
 
+  private var downLowerLimit = 90 - sectionAngleHalf
+  private var downUpperLimit = 90 + sectionAngleHalf
+
+  private var upLowerLimit = 270 - sectionAngleHalf
+  private var upUpperLimit = 270 + sectionAngleHalf
+
+  private var leftLowerLimit = 180 - sectionAngleHalf
+  private var leftUpperLimit = 180 + sectionAngleHalf
+
+  private var rightLowerLimit = 360 - sectionAngleHalf
+  private var rightUpperLimit = sectionAngleHalf
+
   init {
     context.theme.obtainStyledAttributes(attrs, R.styleable.DPadView, 0, 0).apply {
       normalColor = getColor(R.styleable.DPadView_normalColor, context.resolveColorAttr(android.R.attr.textColorSecondary))
       pressedColor = getColor(R.styleable.DPadView_pressedColor, context.resolveColorAttr(R.attr.colorAccent))
+
+      val angle = getFloat(R.styleable.DPadView_directionSectionAngle, 88f)
+      directionSectionAngle = if (angle > 90f || angle < 1f) {
+        88f
+      } else {
+        angle
+      }
+
       centerCircleNormalColor = getColor(R.styleable.DPadView_centerCircleNormalColor, context.resolveColorAttr(R.attr.colorPrimary))
       centerCirclePressedColor = getColor(R.styleable.DPadView_centerCirclePressedColor, context.resolveColorAttr(R.attr.colorPrimaryDark))
       isCenterCircleEnabled = getBoolean(R.styleable.DPadView_centerCircleEnabled, true)
@@ -250,6 +282,20 @@ class DPadView(context: Context, private val attrs: AttributeSet) : AppCompatIma
 
     centerCirclePaint.color = centerCircleNormalColor
 
+    sectionAngleHalf = directionSectionAngle / 2
+
+    downLowerLimit = 90 - sectionAngleHalf
+    downUpperLimit = 90 + sectionAngleHalf
+
+    upLowerLimit = 270 - sectionAngleHalf
+    upUpperLimit = 270 + sectionAngleHalf
+
+    leftLowerLimit = 180 - sectionAngleHalf
+    leftUpperLimit = 180 + sectionAngleHalf
+
+    rightLowerLimit = 360 - sectionAngleHalf
+    rightUpperLimit = sectionAngleHalf
+
     setPadding(padding.toInt(), padding.toInt(), padding.toInt(), padding.toInt())
   }
 
@@ -270,10 +316,10 @@ class DPadView(context: Context, private val attrs: AttributeSet) : AppCompatIma
 
     arcsRect.set(clipBoundsRect.left.toFloat(), clipBoundsRect.top.toFloat(), clipBoundsRect.right.toFloat(), clipBoundsRect.bottom.toFloat())
 
-    canvas.drawArc(arcsRect, 46f, sweepAngle, true, downPaint)
-    canvas.drawArc(arcsRect, 136f, sweepAngle, true, leftPaint)
-    canvas.drawArc(arcsRect, 226f, sweepAngle, true, upPaint)
-    canvas.drawArc(arcsRect, 316f, sweepAngle, true, rightPaint)
+    canvas.drawArc(arcsRect, downLowerLimit, directionSectionAngle, true, downPaint)
+    canvas.drawArc(arcsRect, leftLowerLimit, directionSectionAngle, true, leftPaint)
+    canvas.drawArc(arcsRect, upLowerLimit, directionSectionAngle, true, upPaint)
+    canvas.drawArc(arcsRect, rightLowerLimit, directionSectionAngle, true, rightPaint)
 
     if (isCenterCircleEnabled) {
       canvas.drawCircle(circleCenter, circleCenter, centerCircleRadius, centerCirclePaint)
@@ -343,13 +389,13 @@ class DPadView(context: Context, private val attrs: AttributeSet) : AppCompatIma
           deg += 360
         }
 
-        if (deg > 315 || deg <= 45) {
+        if (deg > rightLowerLimit || deg <= rightUpperLimit) {
           rightTouched = true
-        } else if (deg > 45 && deg <= 135) {
+        } else if (deg in downLowerLimit..downUpperLimit) {
           downTouched = true
-        } else if (deg > 135 && deg <= 225) {
+        } else if (deg in leftLowerLimit..leftUpperLimit) {
           leftTouched = true
-        } else if (deg > 225 && deg < 315) {
+        } else if (deg in upLowerLimit..upUpperLimit) {
           upTouched = true
         }
       }

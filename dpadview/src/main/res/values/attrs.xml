@@ -11,6 +11,9 @@
     <!-- Color of the direction section when it is pressed -->
     <attr name="pressedColor" format="color" />
 
+    <!-- Angle for each direction section (should be between 1 and 90) -->
+    <attr name="directionSectionAngle" format="float" />
+
 
     <!-- Whether to enable the center circle -->
     <attr name="centerCircleEnabled" format="boolean" />
@@ -60,6 +63,5 @@
 
     <!-- The color to tint the center icon with -->
     <attr name="centerIconTint" format="color" />
-
   </declare-styleable>
 </resources>

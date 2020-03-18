@@ -26,6 +26,7 @@ class MainActivity : AppCompatActivity() {
         normalColor = prefs.getInt("normal_color", 0)
         pressedColor = prefs.getInt("pressed_color", 0)
         padding = getFloat("image_padding", 24f)
+        directionSectionAngle = getFloat("direction_section_angle", 88f)
 
         isCenterCircleEnabled = prefs.getBoolean("center_circle", true)
         isCenterCirclePressEnabled = prefs.getBoolean("center_circle_press", true)

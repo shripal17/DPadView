@@ -28,7 +28,7 @@ allProjects {
 ```groovy
 dependencies {
   //...
-  implementation 'com.github.shripal17:DPadView:1.0.2'
+  implementation 'com.github.shripal17:DPadView:1.0.3'
 }
 ```
 
@@ -67,6 +67,7 @@ All the mentioned attributes are applicable for both Kotlin/Java and XML
 | `imagePadding` | Padding for the drawable to be displayed passed as `src` | Dimension (px at runtime) | `24dp` |
 | `normalColor` | Color of the direction section when it is not pressed | Color Int | Current theme's `textColorSecondary` |
 | `pressedColor` | Color of the direction section when it is pressed | Color Int | Current theme's `colorAccent` |
+| `directionSectionAngle` | Angle for each direction section (should be between 1 and 90) | Float | 88 |
 | `centerCircleEnabled` | Whether to enable the center circle | Boolean | `true` |
 | `centerCirclePressEnabled` | If `centerCircleEnabled` is true, whether it should detect touch on the center circle | Boolean | `true` |
 | `centerCircleNormalColor` | Color of the center circle when it is not pressed | Color Int | Current theme's `colorPrimary` |

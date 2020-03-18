@@ -23,6 +23,14 @@
     android:singleLine="true"
     android:title="Image Padding" />
 
+  <EditTextPreference
+    android:defaultValue="88"
+    android:key="direction_section_angle"
+    android:selectAllOnFocus="true"
+    android:singleLine="true"
+    android:summary="Must be between 1 and 90"
+    android:title="Direction Section Angle" />
+
   <PreferenceCategory android:title="Center Circle">
     <CheckBoxPreference
       android:defaultValue="true"
