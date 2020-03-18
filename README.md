@@ -103,6 +103,7 @@ dpadView.modify {
 ```
 
 ## Listening to presses
+### Touch Tracking
 `DPadView` provides a listener similar to `onTouchListener`, via `onDirectionPressedListener`
 
 It has 2 parameters:
@@ -111,6 +112,13 @@ It has 2 parameters:
 ```kotlin
 dpadView.onDirectionPressListener = { direction, action ->
   // use direction and action
+}
+```
+
+### Click Tracking
+```kotlin
+dpadView.onDirectionClickListener = { direction -> 
+  // the direction which has been clicked
 }
 ```
 
